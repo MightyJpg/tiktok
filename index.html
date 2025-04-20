@@ -182,7 +182,7 @@
 
         <footer class="mt-8 text-center text-gray-500 dark:text-gray-400 text-sm">
             <p>Download TikTok videos easily without watermark. For personal use only.</p>
-            <p class="mt-2">Not affiliated with TikTok.</p>
+            <p class="mt-2">Made With ❤️ | By Zilfa</p>
         </footer>
     </div>
 
@@ -340,14 +340,34 @@
                 
                 // Audio only
                 downloadAudio.onclick = () => {
-                    openDownloadUrl(videoData.music);
+                    openDownloadUrl(videoData.music, 'audio');
                 };
             }
             
-            // Function to open download URL
-            function openDownloadUrl(url) {
-                // Open in new tab
-                window.open(url, '_blank');
+            // Function to trigger file download
+            function openDownloadUrl(url, fileType = 'video') {
+                // Create a temporary anchor element
+                const downloadLink = document.createElement('a');
+                downloadLink.href = url;
+                
+                // Set suggested filename based on video title and type
+                const sanitizedTitle = (videoData.title || 'tiktok-video')
+                    .replace(/[^\w\s-]/g, '') // Remove special characters
+                    .trim()
+                    .replace(/\s+/g, '-') // Replace spaces with hyphens
+                    .substring(0, 30); // Limit length
+                
+                const extension = fileType === 'audio' ? '.mp3' : '.mp4';
+                downloadLink.download = `${sanitizedTitle}${extension}`;
+                
+                // Append to document temporarily
+                document.body.appendChild(downloadLink);
+                
+                // Trigger click programmatically
+                downloadLink.click();
+                
+                // Clean up
+                document.body.removeChild(downloadLink);
             }
             
             // Add event listeners
